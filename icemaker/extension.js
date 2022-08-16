@@ -1,5 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+const { exec } = require('child_process');
+const { copyFile } = require('fs');
 const vscode = require('vscode');
 
 // this method is called when your extension is activated
@@ -10,19 +12,29 @@ const vscode = require('vscode');
  */
 function activate(context) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "icemaker" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerCommand('icemaker.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from IceMaker!');
 	});
+
+	disposable = vscode.commands.registerCommand('icemaker.newProject', function () {
+		var term = vscode.window.createTerminal("IceMaker Terminal", "cmd");
+
+		// create pcf folder
+		term.sendText("mkdir pcf");
+		term.sendText("echo f|xcopy /c /y /i " + __dirname +"\\pcf\\fomu-evt2.pcf pcf\\fomu-evt2.pcf");
+		term.sendText("echo f|xcopy /c /y /i " + __dirname +"\\pcf\\fomu-evt3.pcf pcf\\fomu-evt3.pcf");
+		term.sendText("echo f|xcopy /c /y /i " + __dirname +"\\pcf\\fomu-hacker.pcf pcf\\fomu-hacker.pcf");
+		term.sendText("echo f|xcopy /c /y /i " + __dirname +"\\pcf\\fomu-pvt.pcf pcf\\fomu-pvt.pcf");
+		// copy makefile
+		term.sendText("echo f|xcopy /c /y /i " + __dirname +"\\Makefile Makefile");
+
+		term.sendText("mkdir bin");
+		term.sendText("echo f|xcopy /c /y /i " + __dirname +"\\template.v top.v");
+
+		//vscode.window.showInformationMessage();
+	});
+
+	
 
 	context.subscriptions.push(disposable);
 }

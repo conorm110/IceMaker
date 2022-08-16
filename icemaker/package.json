@@ -10,14 +10,21 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:icemaker.helloWorld"
+    "onCommand:icemaker.helloWorld",
+    "onCommand:icemaker.newProject"
   ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
+    "commands": [
+    {
       "command": "icemaker.helloWorld",
       "title": "Hello World"
-    }]
+    },
+    {
+      "command": "icemaker.newProject",
+      "title": "Create new IceMaker project"
+    }
+  ]
   },
   "scripts": {
     "lint": "eslint .",
