@@ -28,6 +28,11 @@ If you dont want to install everything or you already had IceStorm set up just c
     ```
 
 ## Creating and Uploading Projects with IceMaker
+**0. Installing the Extension**
+- Download latest release
+- In VS Code, press `CTRL + SHIFT + X` to open extensions menu
+- Above the extensions marketplace search, click the 3 dots, install from VSIX, then select the VSIX in the release
+
 **1. Setting Up a New Project**
  - Create and open a new directory in VS Code
  - Open command palette
