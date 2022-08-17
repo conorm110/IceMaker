@@ -10,21 +10,51 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:icemaker.helloWorld",
+    "onCommand:icemaker.uploadToFomu",
+    "onCommand:icemaker.generateOutputevt1",
+    "onCommand:icemaker.generateOutputevt2",
+    "onCommand:icemaker.generateOutputevt3",
+    "onCommand:icemaker.generateOutputpvt",
+    "onCommand:icemaker.generateOutputhacker",
+    "onCommand:icemaker.cleanProject",
     "onCommand:icemaker.newProject"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
-    {
-      "command": "icemaker.helloWorld",
-      "title": "Hello World"
-    },
-    {
-      "command": "icemaker.newProject",
-      "title": "Create new IceMaker project"
-    }
-  ]
+      {
+        "command": "icemaker.generateOutputevt1",
+        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for EVT1"
+      },
+      {
+        "command": "icemaker.generateOutputevt2",
+        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for EVT2"
+      },
+      {
+        "command": "icemaker.generateOutputevt3",
+        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for EVT2"
+      },
+      {
+        "command": "icemaker.generateOutputpvt",
+        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for PVT"
+      },
+      {
+        "command": "icemaker.generateOutputhacker",
+        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for HACKER"
+      },
+      {
+        "command": "icemaker.uploadToFomu",
+        "title": "IceMaker: Upload Project to FOMU"
+      },
+      {
+        "command": "icemaker.newProject",
+        "title": "IceMaker: Set Up New Project in Current Directory"
+      },
+      {
+        "command": "icemaker.cleanProject",
+        "title": "IceMaker: Remove Old Output Files"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

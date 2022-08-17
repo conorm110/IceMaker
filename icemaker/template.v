@@ -1,4 +1,3 @@
-
 `ifdef EVT
 `define BLUEPWM  RGB0PWM
 `define REDPWM   RGB1PWM
@@ -16,32 +15,23 @@
 `endif
 
 module top (
-    // 48MHz Clock input
-    // --------
     input clki,
-    // LED outputs
-    // --------
+
     output rgb0,
     output rgb1,
     output rgb2,
-    // User touchable pins
-    // --------
-    // Connect 1-2 to enable blue LED
-    input  user_1,
-    output user_2,
-    // Connect 3-4 to enable red LED
-    output user_3,
-    input  user_4,
-    // USB Pins (which should be statically driven if not being used).
-    // --------
+
+    //input  user_1,
+    //output user_2,
+    //output user_3,
+    //input  user_4,
+    
     output usb_dp,
     output usb_dn,
     output usb_dp_pu
 );
 
-    // Assign USB pins to "0" so as to disconnect Fomu from
-    // the host system.  Otherwise it would try to talk to
-    // us over USB, which wouldn't work since we have no stack.
+    // Set all USB low to disconnect from host
     assign usb_dp = 1'b0;
     assign usb_dn = 1'b0;
     assign usb_dp_pu = 1'b0;
@@ -53,63 +43,25 @@ module top (
         .GLOBAL_BUFFER_OUTPUT(clk)
     );
 
-    // Configure user pins so that we can detect the user connecting
-    // 1-2 or 3-4 with conductive material.
-    //
-    // We do this by grounding user_2 and user_3, and configuring inputs
-    // with pullups on user_1 and user_4.
-    assign user_2 = 1'b0;
-    assign user_3 = 1'b0;
-
-    localparam SB_IO_TYPE_SIMPLE_INPUT = 6'b000001;
-
-    wire user_1_pulled;
-    SB_IO #(
-        .PIN_TYPE(SB_IO_TYPE_SIMPLE_INPUT),
-        .PULLUP(1'b1)
-    ) user_1_io (
-        .PACKAGE_PIN(user_1),
-        .OUTPUT_ENABLE(1'b0),
-        .INPUT_CLK(clk),
-        .D_IN_0(user_1_pulled),
-    );
-
-    wire user_4_pulled;
-    SB_IO #(
-        .PIN_TYPE(SB_IO_TYPE_SIMPLE_INPUT),
-        .PULLUP(1'b 1)
-    ) user_4_io (
-        .PACKAGE_PIN(user_4),
-        .OUTPUT_ENABLE(1'b0),
-        .INPUT_CLK(clk),
-        .D_IN_0(user_4_pulled),
-    );
-
-    wire enable_blue = ~user_1_pulled;
-    wire enable_red  = ~user_4_pulled;
-
-    // Use counter logic to divide system clock.  The clock is 48 MHz,
-    // so we divide it down by 2^28.
-    reg [28:0] counter = 0;
+    // Divide clock to much slower signal so we can see it
+    reg [22:0] counter = 0;
     always @(posedge clk) begin
         counter <= counter + 1;
     end
+    wire slow_clk = counter[22];
 
-    // Instantiate iCE40 LED driver hard logic, connecting up
-    // latched button state, counter state, and LEDs.
-    //
-    // Note that it's possible to drive the LEDs directly,
-    // however that is not current-limited and results in
-    // overvolting the red LED.
-    //
-    // See also:
-    // https://www.latticesemi.com/-/media/LatticeSemi/Documents/ApplicationNotes/IK/ICE40LEDDriverUsageGuide.ashx?document_id=50668
+    // Driven by the slower couple HZ clock, increment a register corresponding to the RGB LEDs
+    reg [2:0] rgb = 3'b000;
+    always @(posedge slow_clk) begin
+        rgb <= rgb + 1;
+    end
+
     SB_RGBA_DRV RGBA_DRIVER (
         .CURREN(1'b1),
         .RGBLEDEN(1'b1),
-        .`BLUEPWM(enable_blue),     // Blue
-        .`REDPWM(enable_red),       // Red
-        .`GREENPWM(counter[23]),    // Green (blinking)
+        .`BLUEPWM(rgb[0]),
+        .`REDPWM(rgb[1]),
+        .`GREENPWM(rgb[2]),
         .RGB0(rgb0),
         .RGB1(rgb1),
         .RGB2(rgb2)
@@ -118,7 +70,6 @@ module top (
     // Parameters from iCE40 UltraPlus LED Driver Usage Guide, pages 19-20
     localparam RGBA_CURRENT_MODE_FULL = "0b0";
     localparam RGBA_CURRENT_MODE_HALF = "0b1";
-
     // Current levels in Full / Half mode
     localparam RGBA_CURRENT_04MA_02MA = "0b000001";
     localparam RGBA_CURRENT_08MA_04MA = "0b000011";
@@ -126,13 +77,9 @@ module top (
     localparam RGBA_CURRENT_16MA_08MA = "0b001111";
     localparam RGBA_CURRENT_20MA_10MA = "0b011111";
     localparam RGBA_CURRENT_24MA_12MA = "0b111111";
-
-    // Set parameters of RGBA_DRIVER (output current)
-    //
-    // Mapping of RGBn to LED colours determined experimentally
     defparam RGBA_DRIVER.CURRENT_MODE = RGBA_CURRENT_MODE_HALF;
-    defparam RGBA_DRIVER.RGB0_CURRENT = RGBA_CURRENT_16MA_08MA;  // Blue - Needs more current.
-    defparam RGBA_DRIVER.RGB1_CURRENT = RGBA_CURRENT_08MA_04MA;  // Red
-    defparam RGBA_DRIVER.RGB2_CURRENT = RGBA_CURRENT_08MA_04MA;  // Green
+    defparam RGBA_DRIVER.RGB0_CURRENT = RGBA_CURRENT_16MA_08MA; // Blue - Needs more current.
+    defparam RGBA_DRIVER.RGB1_CURRENT = RGBA_CURRENT_08MA_04MA; // Red
+    defparam RGBA_DRIVER.RGB2_CURRENT = RGBA_CURRENT_08MA_04MA; // Green
 
 endmodule
