@@ -1,7 +1,7 @@
 {
   "name": "icemaker",
   "displayName": "IceMaker",
-  "description": "Verilog editor for iCE40 FPGAs using DFU",
+  "description": "Visual Studio Code extension automating tasks for using verilog with FOMU",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.70.0"
