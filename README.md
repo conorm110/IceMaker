@@ -12,7 +12,7 @@ If you dont want to install everything or you already had IceStorm set up just c
 - icepack
 - dfu-util
 - tee
-  - To get this and other unix commands on windows, [unxutils](http://unxutils.sourceforge.net/) works really great but I'm sure there are other better fixes. Looks a bit sketch but I don't have any viruses right now
+  - To get this and other unix commands on windows, [unxutils](https://sourceforge.net/projects/unxutils/files/unxutils/current/) works really great but I'm sure there are other better fixes. Looks a bit sketch but I don't have any viruses right now
 - make
   - To get make on windows, go to powershell, then type the following to install chocolatey
   
