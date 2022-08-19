@@ -11,11 +11,7 @@
   ],
   "activationEvents": [
     "onCommand:icemaker.uploadToFomu",
-    "onCommand:icemaker.generateOutputevt1",
-    "onCommand:icemaker.generateOutputevt2",
-    "onCommand:icemaker.generateOutputevt3",
-    "onCommand:icemaker.generateOutputpvt",
-    "onCommand:icemaker.generateOutputhacker",
+    "onCommand:icemaker.generateOutput",
     "onCommand:icemaker.cleanProject",
     "onCommand:icemaker.newProject"
   ],
@@ -23,24 +19,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "icemaker.generateOutputevt1",
-        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for EVT1"
-      },
-      {
-        "command": "icemaker.generateOutputevt2",
-        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for EVT2"
-      },
-      {
-        "command": "icemaker.generateOutputevt3",
-        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for EVT2"
-      },
-      {
-        "command": "icemaker.generateOutputpvt",
-        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for PVT"
-      },
-      {
-        "command": "icemaker.generateOutputhacker",
-        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream for HACKER"
+        "command": "icemaker.generateOutput",
+        "title": "IceMaker: Synthesize, PNR, and Generate Bitstream"
       },
       {
         "command": "icemaker.uploadToFomu",
