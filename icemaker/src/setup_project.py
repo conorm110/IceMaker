@@ -47,6 +47,10 @@ def main():
         f.seek(0) # rewind
         f.write(old.replace("module top", "module " + fieldValues[0])) # write the new line before
 
+    try:
+        os.mkdir("bin")
+    except:
+        a=0
     os.rename("template.v", fieldValues[0] + ".v")
 
 
