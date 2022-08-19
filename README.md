@@ -2,7 +2,6 @@
 
 Visual Studio Code extension automating tasks for programming [FOMU](https://tomu.im/fomu.html) in verilog
 
-> **NOTE: The extension ONLY works for windows 7+, there is NO support for Mac or Linux at the moment, expect it to be added soon**
 
 ## Requirements
 Since IceMaker is just a tweaked version of the compilation code in the FOMU Workshop, it has the same requirements. You can find how to install these [here](https://workshop.fomu.im/en/latest/requirements/index.html).
@@ -32,20 +31,21 @@ If you dont want to install everything or you already had IceStorm set up just c
 - Download latest release
 - In VS Code, press `CTRL + SHIFT + X` to open extensions menu
 - Above the extensions marketplace search, click the 3 dots, install from VSIX, then select the VSIX in the release
+- NOTE: The extension will not be published until its out of pre-release, until then you will need to install this way
 
 **1. Setting Up a New Project**
  - Create and open a new directory in VS Code
  - Open command palette
  - Run `IceMaker: Set Up New Project in Current Directory`
+ - Follow the setup prompts in the wizard
   
 **2. Create a Verilog Design**
-- The project automatically creates a top module called `top` and places it in the file `top.v`
-- The automatically generated verilog design, `top.v`, is a simple blink program
+- The project automatically creates a verilog file with the name of your top module
+- The automatically generated verilog design is an example blink program
 
 **3. Synthesize, PNR, and Generating Bitstream**
 - Open command palette
-- Run `IceMaker: Synthesize, PNR, and Gererate Bitstream for FOMU_REV`
-  - FOMU_REV is either evt1, evt2, evt3, pvt, or hacker. Check which edition your board is first
+- Run `IceMaker: Synthesize, PNR, and Gererate Bitstream`
   
 **4. Upload Project to FOMU**
 - Open command palette
