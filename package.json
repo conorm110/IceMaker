@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "copy-file": "^0.0.1",
+    "copy-file": "^0.0.2",
     "copyfiles": "^2.4.1",
     "create-file": "^1.0.1",
     "inquirer-select-directory": "^1.2.0"
