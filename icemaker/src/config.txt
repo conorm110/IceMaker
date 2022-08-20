@@ -1,0 +1,21 @@
+Copyright (c) 2022 Conor Mika
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+start=init on activation will run checks on dependencies to make sure they
+are installed properly. if they are, dependencies_installed=true. if not
+dependencies_installed=false. if start=init, dependencies_installed will be
+read as false no matter what. python will be set on activation if start=init
+and defaults to python on mac and linux. if on windows, python=py but if py 
+fails to execute python=python will be tested
+
+START
+start=init
+dependencies_installed=false
+python=#
+END

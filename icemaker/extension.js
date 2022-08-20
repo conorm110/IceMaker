@@ -13,8 +13,8 @@ const { exec } = require('child_process');
 const { copyFile } = require('fs');
 const vscode = require('vscode');
 
-
-var term = vscode.window.createTerminal("IceMaker Terminal", "cmd"); // create new terminal on startup
+var term_path;
+var term; // create new terminal on startup
 
 // run any python script in src/ and give the directory of this as an argument
 function run_python_script(path) {
@@ -25,12 +25,12 @@ function run_python_script(path) {
 			term.sendText("py " + __dirname + "\\src\\" + path + " " + __dirname);
 		}
 		else {
-			term.sendText("python " + __dirname + "\\src\\" + path + " " + __dirname);
+			term.sendText("python3 " + __dirname + "/src/" + path + " " + __dirname);
 		}
 		return;
 	}
 	// Only reachable if there was no error which means terminal is not active
-	term = vscode.window.createTerminal("IceMaker Terminal", "cmd"); // create new terminal
+	term = vscode.window.createTerminal("IceMaker Terminal", term_path); // create new terminal
 	term.show(); // show new terminal only if a new one was just created
 	run_python_script(path);
 }
@@ -40,11 +40,18 @@ function run_python_script(path) {
  */
 
 function activate(context) {
+	if (process.platform == "win32") {
+		term_path = "cmd";
+	} else  {
+		term_path = "sh";
+	}
+	term = vscode.window.createTerminal("IceMaker Terminal", term_path)
 	term.show(); // display terminal on startup
 
 	let disposable = vscode.commands.registerCommand('icemaker.newProject', function () { run_python_script("setup_project.py"); });
 	disposable = vscode.commands.registerCommand('icemaker.uploadToFomu', function () { run_python_script("upload.py"); });
 	disposable = vscode.commands.registerCommand('icemaker.generateOutput', function () { run_python_script("generate_output.py") });
+	disposable = vscode.commands.registerCommand('icemaker.setupWizard', function () { run_python_script("config.py") });
 
 	context.subscriptions.push(disposable);
 }
