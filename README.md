@@ -1,4 +1,5 @@
 # IceMaker 
+> **Linux and MacOS Support Currently Broken, Should Be Fixed Soon!**
 
 Visual Studio Code extension automating tasks for programming [FOMU](https://tomu.im/fomu.html) in verilog
 
