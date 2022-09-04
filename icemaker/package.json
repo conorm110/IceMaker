@@ -2,7 +2,7 @@
   "name": "icemaker",
   "displayName": "IceMaker",
   "description": "Visual Studio Code extension automating tasks for using verilog with FOMU",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -14,7 +14,8 @@
     "onCommand:icemaker.generateOutput",
     "onCommand:icemaker.cleanProject",
     "onCommand:icemaker.newProject",
-    "onCommand:icemaker.setupWizard"
+    "onCommand:icemaker.setupWizard",
+    "onStartupFinished"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -29,7 +30,7 @@
       },
       {
         "command": "icemaker.newProject",
-        "title": "IceMaker: Set Up New Project in Current Directory"
+        "title": "IceMaker: Create New Project Template"
       },
       {
         "command": "icemaker.cleanProject",
