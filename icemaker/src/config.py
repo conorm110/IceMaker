@@ -70,24 +70,22 @@ def full_dep_check():
         for req in reqs: 
             installed_message += "    " + req + "... " + str(reqs_installed[reqs.index(req)]) + "\n"
         installed_message += "\n\nWould you like to install these now?"
-        if print(installed_message):
-            print("Installing dependencies...")
-            if (reqs_installed[2] != True): # make
-                if platform.system() == "Windows":
-                    print("Install Make for Windows\nTo install make...\n 1. Run powershell as admin\n 2. Run \"Set-ExecutionPolicy AllSigned\"\n 3. Run \"Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')) \"\n 4. Close powershell and open CMD as admin\n 5. Run \"choco install make\"\n\n Continue once make installation completed...")
-                else:
-                    print("Install Make\nTo install make for MacOS:\n 1. Open the terminal\n 2. In the terminal run \"xcode-select --install\"\n 3. Follow the prompts\n\n To install for Debian based OSes:\n 1. Open terminal\n 2. In terminal run \"sudo apt-get install -y make\"\n\nIf you are running Windows, your OS is not being recognized.\n\nContinue once make installation completed...")
-            if (reqs_installed[3] != True): # tee
-                if platform.system() == "Windows":
-                    print("Install UnxUtils (contains tee) for Windows\n 1. Download https://sourceforge.net/projects/unxutils/files/unxutils/current/ \n 2. Extract the ZIP somewhere it can stay\n 3. Add [PATH TO UNXUTILS]\\UnxUtils\\usr\\local\\wbin to path in Enviornmental Variables\n\nContinue once unxutils installation completed...")
-                else:
-                    print("You must be running Windows, MacOS, or Linux. If you are seeing this and you are running one of those OSes, check to see if you can run the tee command. If you can't, there may be something wrong with your system. If you can run tee please add an issue to the github repo!\n\nConfiguration Failed!")
-            if (reqs_installed[4] != True or reqs_installed[5] != True or reqs_installed[6] != True): # fomu-toolchain    
-                print("Install FOMU Toolchain\n FOMU Toolchain: https://github.com/im-tomu/fomu-toolchain \n\nFROM FOMU TOOLCHAIN README.MD:\nDownload the latest release for your platform and extract it somewhere on your disk. Then set your PATH:\n    Shell (GNU/Linux, Cygwin/MSYS2, MacOS...): export PATH=[path-to-bin]:$PATH\n    Powershell (Windows): $ENV:PATH = \"[path-to-bin];\" + $ENV:PATH\n    cmd.exe (Windows): PATH=[path-to-bin];%PATH%\n\nOnce installation of FOMU Toolchain is complete, continue...")
-            print("Configuration Wizard Finished!\n\nTo verify file integrity, restart VS Code and run the configuration wizard again to check for dependencies!")
-        else:
-            print("WARNING: IceMaker will not work until all dependencies are installed!\n\n\nConfiguration Wizard Finished!")
-
+        print(installed_message)
+        print("Installing dependencies...")
+        if (reqs_installed[2] != True): # make
+            if platform.system() == "Windows":
+                print("Install Make for Windows\nTo install make...\n 1. Run powershell as admin\n 2. Run \"Set-ExecutionPolicy AllSigned\"\n 3. Run \"Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')) \"\n 4. Close powershell and open CMD as admin\n 5. Run \"choco install make\"\n\n Continue once make installation completed...")
+            else:
+                print("Install Make\nTo install make for MacOS:\n 1. Open the terminal\n 2. In the terminal run \"xcode-select --install\"\n 3. Follow the prompts\n\n To install for Debian based OSes:\n 1. Open terminal\n 2. In terminal run \"sudo apt-get install -y make\"\n\nIf you are running Windows, your OS is not being recognized.\n\nContinue once make installation completed...")
+        if (reqs_installed[3] != True): # tee
+            if platform.system() == "Windows":
+                print("Install UnxUtils (contains tee) for Windows\n 1. Download https://sourceforge.net/projects/unxutils/files/unxutils/current/ \n 2. Extract the ZIP somewhere it can stay\n 3. Add [PATH TO UNXUTILS]\\UnxUtils\\usr\\local\\wbin to path in Enviornmental Variables\n\nContinue once unxutils installation completed...")
+            else:
+                print("You must be running Windows, MacOS, or Linux. If you are seeing this and you are running one of those OSes, check to see if you can run the tee command. If you can't, there may be something wrong with your system. If you can run tee please add an issue to the github repo!\n\nConfiguration Failed!")
+        if (reqs_installed[4] != True or reqs_installed[5] != True or reqs_installed[6] != True): # fomu-toolchain    
+            print("Install FOMU Toolchain\n FOMU Toolchain: https://github.com/im-tomu/fomu-toolchain \n\nFROM FOMU TOOLCHAIN README.MD:\nDownload the latest release for your platform and extract it somewhere on your disk. Then set your PATH:\n    Shell (GNU/Linux, Cygwin/MSYS2, MacOS...): export PATH=[path-to-bin]:$PATH\n    Powershell (Windows): $ENV:PATH = \"[path-to-bin];\" + $ENV:PATH\n    cmd.exe (Windows): PATH=[path-to-bin];%PATH%\n\nOnce installation of FOMU Toolchain is complete, continue...")
+        print("Configuration Wizard Finished!\n\nTo verify file integrity, restart VS Code and run the configuration wizard again to check for dependencies!")
+    
 def main():
     ## Read config.txt and strip everything outside of data
     with open(sys.argv[1] + '/src/config.txt') as f:
