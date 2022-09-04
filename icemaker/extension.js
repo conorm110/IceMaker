@@ -64,13 +64,21 @@ function activate(context) {
 	term = vscode.window.createTerminal("IceMaker Terminal", term_path)
 	term.show(); // display terminal on startup
 
-	let disposable = vscode.commands.registerCommand('icemaker.newProject', function () { run_python_script("setup_project.py"); });
+	let disposable = vscode.commands.registerCommand('icemaker.newProject', function () { setup_new_project(); });
 	disposable = vscode.commands.registerCommand('icemaker.uploadToFomu', function () { execute_term_cmd("dfu-util -D bin/top.dfu"); });
 	disposable = vscode.commands.registerCommand('icemaker.generateOutput', function () { generate_output(); });
 	disposable = vscode.commands.registerCommand('icemaker.setupWizard', function () { run_python_script("config.py"); });
 
 	context.subscriptions.push(disposable);
 }
+
+function setup_new_project() {
+	run_python_script("setup_project.py");
+	vscode.window.showOpenDialog();
+	vscode.window.createInputBox();
+	return;
+}
+
 
 /**
  * findIcemaker(require('path').dirname(vscode.window.activeTextEditor.document.fileName)) will give the path of the .icemaker file as a string
@@ -91,8 +99,36 @@ function findIcemaker(startPath) {
 };
 
 function generate_output() {
+	var icemaker_file = "empty";
+	var isErr = false;
+	try {
+		vscode.window.activeTextEditor.document.fileName;
+	} catch(err) {
+		isErr = true;
+		const options = {
+			canSelectMany: false,
+			openLabel: 'Select',
+			canSelectFiles: true,
+			canSelectFolders: false
+		};
+	   vscode.window.showOpenDialog(options).then(fileUri => {
+		   if (fileUri && fileUri[0]) {
+			   console.log('Selected file: ' + fileUri[0].fsPath);
+			   icemaker_file = fileUri[0].fsPath;
+			   generate_actions(icemaker_file);
+		   }
+	   });
+	}
+	if (!isErr) {
+		icemaker_file = findIcemaker(require('path').dirname(vscode.window.activeTextEditor.document.fileName));
+		generate_actions(icemaker_file);
+	}
+	
+}
+
+function generate_actions (icemaker_file) {
 	var board_rev;
-	fs.readFile(findIcemaker(require('path').dirname(vscode.window.activeTextEditor.document.fileName)), 'utf8', (err, data) => {
+	fs.readFile(icemaker_file, 'utf8', (err, data) => {
 		if (err) {
 		  return "err2";
 		}
