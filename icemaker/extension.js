@@ -15,6 +15,7 @@ const vscode = require('vscode');
 var path = require("path");
 const fs = require('fs');
 const { Console } = require('console');
+const { stringify } = require('querystring');
 
 var term_path;
 var term; // create new terminal on startup
@@ -73,11 +74,68 @@ function activate(context) {
 }
 
 function setup_new_project() {
-	run_python_script("setup_project.py");
-	vscode.window.showOpenDialog();
-	vscode.window.createInputBox();
+	const options = {
+		canSelectMany: false,
+		openLabel: 'Select',
+		canSelectFiles: false,
+		canSelectFolders: true
+	};
+   vscode.window.showOpenDialog(options).then(fileUri => {
+	   if (fileUri && fileUri[0]) {
+		   console.log('Selected folder: ' + fileUri[0].fsPath);
+		   var icemaker_folder = fileUri[0].fsPath;
+		   get_board_rev(icemaker_folder);
+	   }
+   });
 	return;
 }
+async function get_board_rev(icemaker_folder) {
+	console.log(icemaker_folder);
+	const options = ['hacker','pvt','evt1','evt2','evt3'];
+	var qp_ret = await vscode.window.showQuickPick(options);
+	await create_icemaker(icemaker_folder, qp_ret);
+	return;
+}
+
+function create_icemaker(icemaker_folder, qp_ret) {
+	fs.writeFile(icemaker_folder + '\\top.icemaker', 'FOMU_REV=' + qp_ret + ';', function (err) {
+		if (err) {
+			return console.log(err);
+		}
+	});
+	if (!fs.existsSync(icemaker_folder + '\\bin')){
+		fs.mkdirSync(icemaker_folder + '\\bin');
+	}
+	if (!fs.existsSync(icemaker_folder + '\\pcf')){
+		fs.mkdirSync(icemaker_folder + '\\pcf');
+	}
+	copy_pcf(icemaker_folder);
+	fs.copyFile(__dirname + '\\template\\template.v', icemaker_folder + '\\top.v', (err) => {
+		if (err) throw err;
+			
+		console.log('File Copy Successfully.');
+		});
+	return;
+}
+
+function copy_pcf(icemaker_folder) {
+	var startPath = __dirname + '\\template\\pcf'
+	if (!fs.existsSync(startPath)) {
+		console.log("no dir ", startPath);
+		return;
+	}
+	var files = fs.readdirSync(startPath);
+	for (var i = 0; i < files.length; i++) {
+		var filename = path.join(startPath, files[i]);
+		if (filename.endsWith(".pcf")) {
+			fs.copyFile(filename, icemaker_folder + '\\pcf\\' + files[i], (err) => {
+			if (err) throw err;
+				
+			console.log('File Copy Successfully.');
+			});
+		};
+	};
+};
 
 
 /**
@@ -109,7 +167,11 @@ function generate_output() {
 			canSelectMany: false,
 			openLabel: 'Select',
 			canSelectFiles: true,
-			canSelectFolders: false
+			canSelectFolders: false,
+			filters: {
+				'Project Files': ['icemaker'],
+				'All files': ['*']
+			}
 		};
 	   vscode.window.showOpenDialog(options).then(fileUri => {
 		   if (fileUri && fileUri[0]) {
