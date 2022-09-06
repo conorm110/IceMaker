@@ -43,19 +43,19 @@ function activate(context) {
 	if (process.platform == "win32") {
 		term_path = "cmd";
 	} else {
-		term_path = "sh";
+		term_path = "/bin/bash";
 	}
 	term = vscode.window.createTerminal("IceMaker Terminal", term_path)
 	term.show(); // display terminal on startup
 
-	fs.readFile(__dirname + '\\config.txt', 'utf8', (err, data) => {
+	fs.readFile(path.join(__dirname, 'config.txt'), 'utf8', (err, data) => {
 		if (err) {
 		  return;
 		}
 		console.log(data.split('=')[1].split(';')[0]);
 		if (data.split('=')[1].split(';')[0] == "true") {
 			setup_wizard();
-			fs.writeFile(__dirname + '\\config.txt', 'init=false;', function (err,data) {
+			fs.writeFile(path.join(__dirname, 'config.txt'), 'init=false;', function (err,data) {
 				if (err) {
 					return console.log(err);
 				} });
@@ -96,7 +96,7 @@ function getWebviewContent() {
 		<title>Getting Started</title>
 		<style>
 		.code {
-			background-color:#828282;
+			background-color:#626262;
 			border-radius:10px;
 			padding-left:5px;
 			padding-right:5px;
@@ -106,7 +106,7 @@ function getWebviewContent() {
 			padding-bottom:0px;
 		}
 		.codeblock {
-			background-color:#828282;
+			background-color:#626262;
 			padding-left:5px;
 			padding-right:5px;
 			font-weight:100;
@@ -242,6 +242,7 @@ function setup_new_project() {
    });
 	return;
 }
+
 async function get_board_rev(icemaker_folder) {
 	console.log(icemaker_folder);
 	const options = ['hacker','pvt','evt1','evt2','evt3'];
@@ -250,45 +251,64 @@ async function get_board_rev(icemaker_folder) {
 	return;
 }
 
+
+
 function create_icemaker(icemaker_folder, qp_ret) {
-	fs.writeFile(icemaker_folder + '\\top.icemaker', 'FOMU_REV=' + qp_ret + ';', function (err) {
+	// Create .icemaker project file
+	var icemaker_file_name = 'top.icemaker';
+	var icemaker_file_contents = 'FOMU_REV=' + qp_ret + ';';
+
+	fs.writeFile(path.join(icemaker_folder, icemaker_file_name), icemaker_file_contents, function (err) {
 		if (err) {
-			return console.log(err);
+			return err; // TODO: handle
 		}
 	});
-	if (!fs.existsSync(icemaker_folder + '\\bin')){
-		fs.mkdirSync(icemaker_folder + '\\bin');
+
+	// Create bin directory
+	if (!fs.existsSync(path.join(icemaker_folder, 'bin'))){
+		fs.mkdirSync(path.join(icemaker_folder, 'bin'));
 	}
-	if (!fs.existsSync(icemaker_folder + '\\pcf')){
-		fs.mkdirSync(icemaker_folder + '\\pcf');
+
+	// Create PCF directory and copy .pcf files over
+	if (!fs.existsSync(path.join(icemaker_folder, 'pcf'))){
+		fs.mkdirSync(path.join(icemaker_folder, 'pcf'));
 	}
-	copy_pcf(icemaker_folder);
-	fs.copyFile(__dirname + '\\template\\template.v', icemaker_folder + '\\top.v', (err) => {
-		if (err) throw err;
-			
-		console.log('File Copy Successfully.');
-		});
+	if (!copy_pcf(icemaker_folder)) {
+		return "err"; // TODO: Handle
+	}
+
+	// Copy template verilog file
+	// TODO: Add quick pick selection for template or blank
+	fs.copyFile(path.join(__dirname, 'template', 'template.v'), path.join(icemaker_folder, 'top.v'), (err) => {
+		if (err) {
+			return err; // TODO: handle
+		}
+	});
+
 	return;
 }
 
 function copy_pcf(icemaker_folder) {
-	var startPath = __dirname + '\\template\\pcf';
+	// Check if pcf directory exists
+	var startPath = path.join(__dirname, 'template', 'pcf');
 	if (!fs.existsSync(startPath)) {
-		console.log("no dir ", startPath);
-		return;
+		return false; 
 	}
+
+	// Read and go through template/pcf folder in extension data, copy all .pcf files
 	var files = fs.readdirSync(startPath);
 	for (var i = 0; i < files.length; i++) {
 		var filename = path.join(startPath, files[i]);
 		if (filename.endsWith(".pcf")) {
-			fs.copyFile(filename, icemaker_folder + '\\pcf\\' + files[i], (err) => {
-			if (err) throw err;
-				
-			console.log('File Copy Successfully.');
+			fs.copyFile(filename, path.join(icemaker_folder, 'pcf', files[i]), (err) => {
+				if (err) {
+					return false;
+				}
 			});
 		};
 	};
-};
+	return true;
+}
 
 
 /**
@@ -418,16 +438,16 @@ function upload_to_fomu() {
 	   });
 	}
 	if (!isErr) {
-		bitstream_file = require('path').dirname(findIcemaker(require('path').dirname(vscode.window.activeTextEditor.document.fileName))) + '\\bin\\top.bit';
+		bitstream_file = path.join(require('path').dirname(findIcemaker(require('path').dirname(vscode.window.activeTextEditor.document.fileName))),'bin','top.bit');
 		uploading_fomu(bitstream_file);
 	}
 	return;
 }
 
 function uploading_fomu (bitstream_file) {
-	fs.copyFile(bitstream_file, require('path').dirname(bitstream_file) + '\\top.dfu', () => {});
-	execute_term_cmd("dfu-suffix -v 1209 -p 70b1 -a " + require('path').dirname(bitstream_file) + '\\bin\\top.dfu');
-	execute_term_cmd("dfu-util -D " + require('path').dirname(bitstream_file) + '\\top.dfu');
+	fs.copyFile(bitstream_file, path.join(require('path').dirname(bitstream_file), 'top.dfu'), () => {});
+	execute_term_cmd("dfu-suffix -v 1209 -p 70b1 -a " + path.join(require('path').dirname(bitstream_file), 'bin','top.dfu'));
+	execute_term_cmd("dfu-util -D " + path.join(require('path').dirname(bitstream_file), 'top.dfu'));
 	return;
 }
 function deactivate() { }
