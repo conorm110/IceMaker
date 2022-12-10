@@ -26,26 +26,66 @@
         .USER_SIGNAL_TO_GLOBAL_BUFFER(clki),
         .GLOBAL_BUFFER_OUTPUT(clk)
     );
+    
 
-    // Divide clock to much slower signal so we can see it
-    reg [22:0] counter = 0;
+    reg [23:0] div;
     always @(posedge clk) begin
-        counter <= counter + 1;
+        div <= div + 1;
     end
-    wire slow_clk = counter[22];
+    
+    wire [15:0] outM;
+    wire writeM;
+    wire [15:0] addressM;
+    wire [15:0] pc_out;
+    wire [15:0] Aout;
+    wire [15:0] Aregin;
+    wire [15:0] Dout;
+    wire loadA;
 
-    // Driven by the slower couple HZ clock, increment a register corresponding to the RGB LEDs
-    reg [2:0] rgb = 3'b000;
-    always @(posedge slow_clk) begin
-        rgb <= rgb + 1;
+    wire [15:0] rom_dout;
+    CPU CPU_INST_A (
+        .clk(div[22]),
+        .inM(inM),
+        .instruction(rom_dout),
+        .reset(1'b0),
+        .outM(outM),
+        .writeM(writeM),
+        .addressM(addressM),
+        .pc_16(pc_out),
+        .PCinc(PCinc),
+        .PCload(PCload),
+        .Aregin(Aregin),
+        .loadA(loadA),
+        .Aout(Aout),
+        .Dout(Dout)
+    );
+
+    wire [15:0] inM;
+    RAM8 RAM8_INST_A (
+        .clk(clk),
+        .in(outM),
+        .load(writeM),
+        .address(addressM),
+        .out(inM)
+    );
+
+    ROM ROM_main (
+        .rom_dout(rom_dout),
+        .clk(clk),
+        .pc_out(pc_out)
+    );
+
+    reg [2:0] rgb_buffer;
+    always @(posedge clk) begin
+        rgb_buffer <= inM[2:0];
     end
 
     SB_RGBA_DRV RGBA_DRIVER (
         .CURREN(1'b1),
         .RGBLEDEN(1'b1),
-        .`BLUEPWM(rgb[0]),
-        .`REDPWM(rgb[1]),
-        .`GREENPWM(rgb[2]),
+        .`BLUEPWM(rgb_buffer[0]),
+        .`REDPWM(rgb_buffer[1]),
+        .`GREENPWM(rgb_buffer[2]),
         .RGB0(rgb0),
         .RGB1(rgb1),
         .RGB2(rgb2)

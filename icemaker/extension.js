@@ -26,7 +26,8 @@ const pnr = require(path.join(__dirname, "js", "pnr.js"));
  */
 function activate(context) {
 	terminal.open();
-	setup.run();
+	// TODO: Only run on initial install 
+	// setup.run();
 	
 	let disposable = vscode.commands.registerCommand('icemaker.newProject', function () { projects.create_new(); });
 	disposable = vscode.commands.registerCommand('icemaker.uploadToFomu', function () { fomu.upload_bitstream(); });
@@ -74,7 +75,10 @@ function generate_actions (icemaker_file) {
 		if (err) {
 		  return "err2";
 		}
-		terminal.send("yosys " + yosys.flags(data) + " -p \"read_verilog top.v; hierarchy -top top -libdir .; synth_ice40 -top top -json bin/top.json\"");
+
+		var top_file_name = projects.get_top_file_name(data);
+		var top_name = projects.get_top_name(data);
+		terminal.send("yosys " + yosys.flags(data) + " -p \"read_verilog " + top_file_name + "; hierarchy -top " + top_name + " -libdir .; synth_ice40 -top " + top_name + " -json bin/top.json\"");
 		terminal.send("nextpnr-ice40 " + pnr.flags(data) + " --json bin/top.json --asc bin/top.asc");
 		terminal.send("icepack bin/top.asc bin/top.bit");
 	  });
