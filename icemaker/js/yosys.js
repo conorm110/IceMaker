@@ -9,6 +9,14 @@
  * furnished to do so, subject to the following conditions:
  */
 
+/**
+ * flags(data)
+ * 
+ * Generates the Yosys flags for the board revision
+ * 
+ * @param {string} data .icemaker file contents
+ * @returns {string} flags
+ */
 function flags(data) {
     var board_rev;
     var lines = data.split('\n');

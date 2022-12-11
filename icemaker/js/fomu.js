@@ -15,6 +15,12 @@
  const projects = require(path.join(__dirname, "projects.js"));
  const terminal = require(path.join(__dirname, "terminal.js"));
 
+ /**
+  * upload_bitstream()
+  * 
+  * Entry point for bitstream generation, calls function to upload to fomu after .dfu created
+  * 
+  */
 function upload_bitstream() {
 	var bitstream_file = "empty";
 	var isErr = false;
@@ -47,6 +53,12 @@ function upload_bitstream() {
 	return;
 }
 
+/**
+ * uploading_fomu (bitstream_file)
+ * 
+ * Called from upload_bitstream, uploads dfu to fomu
+ * @param {string} bitstream_file path to bitstream file
+ */
 function uploading_fomu (bitstream_file) {
 	fs.copyFile(bitstream_file, path.join(require('path').dirname(bitstream_file), 'top.dfu'), () => {});
 	terminal.send("dfu-suffix -v 1209 -p 70b1 -a " + path.join(require('path').dirname(bitstream_file), 'bin','top.dfu'));

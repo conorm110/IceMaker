@@ -12,8 +12,12 @@
 
 const vscode = require('vscode');
 var term_path;
-var term; // create new terminal on startup
+var term;
 
+/**
+ * send(cmd)
+ * @param {string} cmd - command to send to terminal
+ */
 function send(cmd) {
     refresh();
 	try {
@@ -24,6 +28,11 @@ function send(cmd) {
 	}
 }
 
+/**
+ * open() - opens terminal initially
+ * 
+ * TODO: Add support for other terminals
+ */
 function open() {
     if (process.platform == "win32") {
 		term_path = "cmd";

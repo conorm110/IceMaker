@@ -9,6 +9,14 @@
  * furnished to do so, subject to the following conditions:
  */
  
+/**
+ * flags(data)
+ * 
+ * Using config set in .icemaker file find the correct pnr flags
+ * 
+ * @param {string} data icemaker file contents
+ * @returns {string} pnr flags
+ */
  function flags(data) {
     var board_rev;
     var lines = data.split('\n');

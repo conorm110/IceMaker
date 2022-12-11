@@ -9,32 +9,38 @@
  * furnished to do so, subject to the following conditions:
  */
 
- const vscode = require('vscode');
- var path = require("path");
- const fs = require('fs');
- 
+var path = require("path");
+const fs = require('fs');
 
- function copy_template(icemaker_folder) {
-     // Check if pcf directory exists
-     var startPath = path.join(require('path').dirname(__dirname), 'template', 'nand2tetris');
-     if (!fs.existsSync(startPath)) {
-         return false; 
-     }
- 
-     // Read and go through template/pcf folder in extension data, copy all .pcf files
-     var files = fs.readdirSync(startPath);
-     for (var i = 0; i < files.length; i++) {
-         var filename = path.join(startPath, files[i]);
-         if (filename.endsWith(".v")) {
-             fs.copyFile(filename, path.join(icemaker_folder, files[i]), (err) => {
-                 if (err) {
-                     return false;
-                 }
-             });
-         };
-     };
-     return true;
- }
+/**
+ * copy_template(icemaker_folder)
+ * 
+ * Copies all necessary files for nand2tetris template
+ * 
+ * @param {string} icemaker_folder path to icemaker folder
+ * @returns {boolean} true if successfully copied
+ */
+function copy_template(icemaker_folder) {
+    // Check if pcf directory exists
+    var startPath = path.join(require('path').dirname(__dirname), 'template', 'nand2tetris');
+    if (!fs.existsSync(startPath)) {
+        return false;
+    }
 
- 
- module.exports = { copy_template };
+    // Read and go through template/pcf folder in extension data, copy all .pcf files
+    var files = fs.readdirSync(startPath);
+    for (var i = 0; i < files.length; i++) {
+        var filename = path.join(startPath, files[i]);
+        if (filename.endsWith(".v")) {
+            fs.copyFile(filename, path.join(icemaker_folder, files[i]), (err) => {
+                if (err) {
+                    return false;
+                }
+            });
+        };
+    };
+    return true;
+}
+
+
+module.exports = { copy_template };
