@@ -128,7 +128,6 @@ function create_icemaker(icemaker_folder, qp_ret, get_template_qp_ret, project_n
 }
 
 
-
 function copy_pcf(icemaker_folder) {
 	// Check if pcf directory exists
 	var startPath = path.join(require('path').dirname(__dirname), 'template', 'pcf');

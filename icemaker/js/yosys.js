@@ -30,12 +30,11 @@ function flags(data) {
 					yosys_flags = "-D PVT=1";
 				} else {
 					pvt_err = true;
-					console.log(board_rev);
 				}
 				if (!pvt_err) {
 					return yosys_flags;
 				} else {
-					vscode.window.showErrorMessage(".icemaker is not found, are you in the project directory?");
+					return "err";
 				}
 			}
 		}

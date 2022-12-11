@@ -41,7 +41,7 @@
 				if (!pvt_err) {
 					return pnrflags + " --pcf " + pcf;
 				} else {
-					vscode.window.showErrorMessage(".icemaker is not found, are you in the project directory?");
+					return "err";
 				}
 			}
 		}
