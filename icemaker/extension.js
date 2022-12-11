@@ -10,18 +10,13 @@
  */
 
 var path = require("path");
-
 const vscode = require('vscode');
-const fs = require('fs');
-const { profileEnd } = require("console");
 
 const setup = require(path.join(__dirname, "js", "setup.js"));
 const projects = require(path.join(__dirname, "js", "projects.js"));
-const fomu = require(path.join(__dirname, "js", "fomu.js"));
 const terminal = require(path.join(__dirname, "js", "terminal.js"));
-const yosys = require(path.join(__dirname, "js", "yosys.js"));
-const pnr = require(path.join(__dirname, "js", "pnr.js"));
 const icestorm = require(path.join(__dirname, "js", "icestorm.js"));
+const upload = 	require(path.join(__dirname, "js", "upload.js"));
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -32,7 +27,7 @@ function activate(context) {
 	// setup.run();
 	
 	let disposable = vscode.commands.registerCommand('icemaker.newProject', function () { projects.create_new(); });
-	disposable = vscode.commands.registerCommand('icemaker.uploadToFomu', function () { fomu.upload_bitstream(); });
+	disposable = vscode.commands.registerCommand('icemaker.uploadToFomu', function () { upload.bitstream() });
 	disposable = vscode.commands.registerCommand('icemaker.generateOutput', function () { icestorm.generate_output(); });
 	disposable = vscode.commands.registerCommand('icemaker.setupWizard', function () { setup.run(); });
 

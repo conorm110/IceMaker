@@ -18,6 +18,9 @@ const yosys = require(path.join(__dirname, "yosys.js"));
 const pnr = require(path.join(__dirname, "pnr.js"));
 const projects = require(path.join(__dirname, "projects.js"));
 
+
+
+
 function generate_output() {
 	var icemaker_file = "empty";
 	var isErr = false;
@@ -64,7 +67,6 @@ function generate_actions (icemaker_file) {
 		var top_name = projects.get_top_name(data);
 		var project_dir = require('path').dirname(icemaker_file);
 
-		var isErr = false;
 		var pnr_flags = pnr.flags(data);
 		var yosys_flags = yosys.flags(data);
 		if (yosys_flags == "err") {
