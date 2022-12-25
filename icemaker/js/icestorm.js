@@ -18,9 +18,9 @@ const yosys = require(path.join(__dirname, "yosys.js"));
 const pnr = require(path.join(__dirname, "pnr.js"));
 const projects = require(path.join(__dirname, "projects.js"));
 
-const yosys_timeout_ms = 20 * 1000;
-const pnr_timeout_ms = 20 * 1000;
-const icepack_timeout_ms = 20 * 1000;
+const yosys_timeout_ms = 200 * 1000;
+const pnr_timeout_ms = 200 * 1000;
+const icepack_timeout_ms = 200 * 1000;
 
 /**
  * generate_output()

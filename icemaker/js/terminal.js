@@ -36,8 +36,11 @@ function send(cmd) {
 function open() {
     if (process.platform == "win32") {
 		term_path = "cmd";
-	} else {
-		term_path = "/bin/bash";
+	} else if (process.platform == "darwin") {
+		term_path = "zsh";
+	} 
+	else {
+		term_path = "/bin/bash"; // maybe works on ubuntu
 	}
 	term = vscode.window.createTerminal("IceMaker Terminal", term_path)
 	term.show(); // display terminal on startup
