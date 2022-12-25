@@ -77,6 +77,7 @@ function get_html() {
 			<li style="padding-top:2px;padding-bottom:2px;">Powershell (Windows): <span class="code"> $ENV:PATH = "[path-to-bin];" + $ENV:PATH</span></li>
 			<li>cmd.exe (Windows): <span class="code"> PATH=[path-to-bin];%PATH%</span></li>
 		</ul>
+		<p> WARNING FOR MAC USERS: When running any command it will appear as an untrusted program, you have to hit cancel and in system preferences -> secutiry -> general you need to approve every program then run the command again and hit open. It only makes you do this once per program but its a pain</p>
 		<p>To confirm installation, run a command such as <span class="code"> nextpnr-ice40</span> or <span class="code"> yosys</span>. Then, reload vs code.</p>
 	
 		<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Creating Your First Project</h2>
