@@ -2,7 +2,7 @@
   "name": "icemaker",
   "displayName": "IceMaker",
   "description": "Visual Studio Code extension automating tasks for using verilog with FOMU",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.70.0"
   },

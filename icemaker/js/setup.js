@@ -77,7 +77,7 @@ function get_html() {
 			<li style="padding-top:2px;padding-bottom:2px;">Powershell (Windows): <span class="code"> $ENV:PATH = "[path-to-bin];" + $ENV:PATH</span></li>
 			<li>cmd.exe (Windows): <span class="code"> PATH=[path-to-bin];%PATH%</span></li>
 		</ul>
-		<p> WARNING FOR MAC USERS: When running any command it will appear as an untrusted program, you have to hit cancel and in system preferences -> secutiry -> general you need to approve every program then run the command again and hit open. It only makes you do this once per program but its a pain</p>
+		<p> WARNING FOR MAC USERS: When running any command it will appear as an untrusted program, you have to hit cancel in the pop up and then in system preferences -> security -> general you need to approve every program then run the command again and hit open. It only makes you do this once per program but its a pain</p>
 		<p>To confirm installation, run a command such as <span class="code"> nextpnr-ice40</span> or <span class="code"> yosys</span>. Then, reload vs code.</p>
 	
 		<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Creating Your First Project</h2>
@@ -106,14 +106,7 @@ function get_html() {
 				<li>Check FOMU bootloader version with <span class="code">dfu-util -l</span>. If version is older than v2.0.3, you need to <a href="https://workshop.fomu.im/en/latest/bootloader.html#bootloader-update">update the fomu bootloader</a>.</li>
 			</ul>
 			<li>Create a new project template in Command Palette by running <span class="code">IceMaker: Create New Project Template</span></li>
-			<ul>
-				<li>Select the folder to create the new icemaker project</li>
-				<li>Select your <a href="https://workshop.fomu.im/en/latest/requirements/hardware.html">board revision</a></li>
-			</ul>
 			<li>Generate bitstream for FOMU in Command Palette by running <span class="code">IceMaker: Synthesize, PNR, and Generate Bitstream</span></li>
-			<ul>
-				<li>If you do not have a file in your project directory open, you will be prompted for your .icemaker project file</li>
-			</ul>
 			<li>Upload to the FOMU in Command Palette by running <span class="code">IceMaker: Upload Project to FOMU</span></li>
 			<li>After a few seconds your FOMU should begin blinking RGB!</li>
 		</ol>
