@@ -46,7 +46,7 @@
 					console.log(board_rev);
 				}
 				if (!pvt_err) {
-					return pnrflags + " --pcf " + pcf;
+					return pnrflags + " --pcf " + pcf + " --ignore-loops";
 				} else {
 					return "err";
 				}
