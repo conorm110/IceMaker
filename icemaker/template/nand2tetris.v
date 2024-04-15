@@ -56,37 +56,18 @@ input clki,
         .GLOBAL_BUFFER_OUTPUT(clk)
     );
 
-    // Clock divider for CPU & RAM ([22] is 0.5 Hz Demo mode, otherwise use [1])
-    wire cpu_ram_clk;
-    assign cpu_ram_clk = counter[20]; 
-    reg [24:0] counter = 25'b0_0000_0000_0000_0000_0000_0000;
-    always@(posedge clk)
-    begin
-        counter <= counter + 1;
-    end
-
-    // Nand2Tetris 
-    wire [15:0] rom_data;
-    wire [14:0] rom_addr;
-
-    n2t_computer computer (
-        .clk(cpu_ram_clk),
-        .reset(reset), // TODO: shorting FOMU instead of constant should cause reset
-        .user_data_in(data_in),
-        .rom_data(rom_data),
-        .rom_addr(rom_addr),
-        .rgb(rgb)
-        //.n2t_computer_debug_RGB(rgb)
-        //.n2t_CPU_debug_RGB(rgb)
-        //.n2t_DECODE_debug_RGB(rgb)
+    wire clk_3Hz;
+    clk_divider _clk_divider(
+        .in(clk),
+        .out(clk_3Hz)
     );
 
-    n2t_ROM rom (
-        .clk(clk), // Operates on faster clock, posedge buffer in n2t_computer
-        .addr(rom_addr),
-        .data_out(rom_data)
+    HackComputer _HackComputer(
+        .clk(clk_3Hz),
+        .n_reset(reset),
+        .key(data_in),
+        .led(rgb)
     );
-
 
     wire [2:0] rgb;
     // RGB Driver
