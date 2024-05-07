@@ -120,10 +120,6 @@ Or8Way _Or8Way_1 (
 
 wire or3;
 assign or3 = or1 | or2; // Note: Or Module doesn't work because Or is a keyword
-
-Not _Not (
-	.in(or3),
-	.out(zr)
-);
+assign zr = ~or3;
 
 endmodule
