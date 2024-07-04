@@ -99,7 +99,9 @@ function get_html() {
         <p>Custom and generic iCE40 Ultra development boards are supported through the custom-sg48 and custom-uwg30 board types. The board type is selected during project generation and can be changed later in the project.icemaker file. The footprint of the FPGA on your custom/generic development board must match the selected board type. </p>
 
 <p>The I/O defined in the top level Verilog file must be set in the .pcf file corresponding to your custom board's board type. The .pcf files are located in the pcf folder generated in icemaker projects. Each I/O pin must be defined as <span class="code">set_io [pin name] [pin code]</span>. For example, <span class="code">set_io rgb0 39</span> or <span class="code">set_io rgb0 A5</span></p>
-		<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Configuring FOMU for USB Uploading</h2>
+		<p><a href="https://github.com/im-tomu/fomu-hardware/blob/master/archive/evt/reference/FPGA-iCE40UP%205k%20Pinout.xlsx">This spreadsheet</a> has pin names and pin assignments for both iCE40 Ultra footprints</p>
+
+<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Configuring FOMU for USB Uploading</h2>
         <p style="padding-bottom: 0px;margin-bottom: 0px;padding-top: 0px;margin-top: 0px;"><small>NOTE: Not necessary if not using FOMU</small></p>
 		<ol style="padding-top:0px;margin-top:0px;">
 			<li>Setup udev rules for GNU/linux ONLY</li>
