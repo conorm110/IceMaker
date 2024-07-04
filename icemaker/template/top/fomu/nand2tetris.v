@@ -64,7 +64,7 @@ input clki,
 
     HackComputer _HackComputer(
         .clk(clk_3Hz),
-        .n_reset(reset),
+        .n_reset(~reset),
         .key(data_in),
         .led(rgb)
     );

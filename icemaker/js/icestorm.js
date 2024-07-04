@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2022 Conor Mika
+ * Copyright (c) 2024 Conor Mika
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -17,6 +17,7 @@ const terminal = require(path.join(__dirname, "terminal.js"));
 const yosys = require(path.join(__dirname, "yosys.js"));
 const pnr = require(path.join(__dirname, "pnr.js"));
 const projects = require(path.join(__dirname, "projects.js"));
+const icepack = require(path.join(__dirname, "icepack.js"));
 
 const yosys_timeout_ms = 200 * 1000;
 const pnr_timeout_ms = 200 * 1000;
@@ -171,8 +172,15 @@ function run_icepack(project_dir, pnr_ms) {
 			run_icepack(project_dir, c_time); // TODO: timeout
 		}
 		else {
-			terminal.send("icepack bin/top.asc bin/top.bit");
+			fs.readFile(projects.findIcemaker(project_dir), 'utf8', (err, data) => {
+				if (err) {
+					vscode.window.showErrorMessage("0xB (FS): .icemaker file could not be read. Check that your .icemaker file exists in your project directory.")
+					return;
+				}
+			var icepackCMD = "icepack bin/top.asc bin/top." + icepack.type(data);
+			terminal.send(icepackCMD);
 			finish_generation(project_dir);
+			});
 		}
 	});
 }

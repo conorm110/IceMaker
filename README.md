@@ -1,24 +1,36 @@
-
 # IceMaker
+Visual Studio Code extension automating tasks for programming iCE40 Ultra development boards using the [IceStorm](https://github.com/YosysHQ/icestorm) toolchain.
 
-Visual Studio Code extension automating tasks for programming the [FOMU](https://tomu.im/fomu.html) or other iCE40 development boards
-
-## Adding IceMaker to VS Code
-
+**Adding IceMaker to VS Code**
 1. Download the [latest release](https://github.com/conorm110/IceMaker/releases)
+2. Install .vsix file from the release in VS Code
+    * `CTRL + SHIFT + X` to open the extensions menu, then install from the drop down menu on the sidebar
+3. Open the command palette and run `IceMaker: Run Setup Guide` for further instructions on using the extension's tools. 
 
-2. Install .vsix file from release in vs code (`CTRL + SHIFT + X` -> three dots above extensions marketplace search -> install from VSIX)
+## Supported Boards
+Currently the FOMU FPGA family are the only directly supported development boards that are commercially available. It also supports my BaseBoard-1K development board, based on the iCE5LP1K, which has openly available schematics and is easy to replicate.
 
-3. A Getting Started WebView should open, if not open command palette and run IceMaker: Run Setup Wizard
+### FOMU
+[FOMU](https://tomu.im/fomu.html) boards are all directly supported. The toolchain creates a bitstream file which can later be uploaded to a FOMU by running `IceMaker: Upload Project to FOMU` in the command palette. 
+### Custom Boards
+Custom and generic iCE40 Ultra development boards are supported through the custom-sg48 and custom-uwg30 board types. The board type is selected during project generation and can be changed later in the project.icemaker file. The footprint of the FPGA on your custom/generic development board must match the selected board type. 
+
+The I/O defined in the top level Verilog file must be set in the .pcf file corresponding to your custom board's board type. The .pcf files are located in the pcf folder generated in icemaker projects. Each I/O pin must be defined as `set_io [pin name] [pin code]`. For example, `set_io rgb0 39` or `set_io vga0 A5`
+
+Output files are located in the bin file generated in icemaker projects. Icepack generates a final binary file that should be loaded onto your development board's configuration flash PROM. 
+### BaseBoard
+BaseBoard-1K is based on the iCE5LP1K-SG48 and has a DSUB (VGA) connector, a 50 MHz oscillator, and two PMOD headers. Simplifying the design, the FPGA loads its code only from the onboard SST 25VF080B Flash IC. The binary file generated from IceMaker can be loaded onto the flash chip with any SPI programmer or PROM programmer. 
+
+Currently, there is no Verilog VGA controller module or PMOD pin assignments in the extension. BaseBoard is still a work in project, improved template code and schematics will be added soon.
 
 ## Project Templates
+To aid starting projects, three project templates are available:
 
-**Hack Computer:** Starting project template contains a verilog implementation of the Hack Computer. The top template file links the HackComputer module to the inputs and outputs of the FOMU. The reset key sets the program counter to zero, RAM at A=0 contains the three bit value for the FOMU’s RGB LED, and RAM at A=1 contains the value of the second key on the FOMU.
+**Hack Computer Template:** 
+Project contains a Verilog implementation of the Hack Computer. Address zero in the hack computer's memory has dual internal outputs and is used as a data output to control the iCE40 Ultra's onboard RGB controller. The default code in the hack computer's ROM module increments the value of address zero in memory to control the RGB output.
 
-**Template (Default):** Project template contains a single top verilog file with a simple clock divider linked to an RGB controller.
+**Blank Template:** 
+Generates an empty top level Verilog file
 
-**Template (Blank):** Generates an empty project.
-  
-## Generic iCE40 Boards
-This extension utilizes [IceStorm](https://github.com/YosysHQ/icestorm) to generate a bitstream for the project. Configuration files are premade for all FOMU boards in templates/PCF, so FOMU boards are the only currently supported boards. Editing the contents of one of these files to match a generic iCE40 board will allow your project to use the generic board. *Uploading through the extension will not work for most generic boards, support for easily editing pin assignments and adding upload utilities coming soon!*
-
+**Default Template:** 
+Creates a top level Verilog file with a clock input linked to a clock divider module. The iCE40 Ultra's onboard RGB controller is defined as the output in the top file. The value of the RGB output is incremented by the slowed clock. 
