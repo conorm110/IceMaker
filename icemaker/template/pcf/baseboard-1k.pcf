@@ -1,0 +1,11 @@
+# BaseBoard-1K
+set_io vga0 39		# Blue VGA Signal
+set_io vga1 40		# Green VGA Signal
+set_io vga2 41		# Red VGA Signal
+set_io vsync 35  	# VSYNC VGA Signal
+set_io hsync 34	    # HSYNC VGA Signal
+set_io clki 20		# Clock input from 50MHz Oscillator
+set_io spi_mosi 17	# SPI Master Out, Slave In Pin
+set_io spi_miso 14	# SPI Master In, Slave Out Pin
+set_io spi_clk 15	# SPI Master Clock Output Pin
+set_io spi_cs 16	# SPI Chip Select (always high)

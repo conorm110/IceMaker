@@ -38,7 +38,7 @@
       },
       {
         "command": "icemaker.setupWizard",
-        "title": "IceMaker: Run Setup Wizard"
+        "title": "IceMaker: Run Setup Guide"
       }
     ]
   },

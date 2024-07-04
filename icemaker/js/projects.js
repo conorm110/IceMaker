@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2022 Conor Mika
+ * Copyright (c) 2024 Conor Mika
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ function create_new() {
 async function project_config(icemaker_folder) {
 	console.log(icemaker_folder);
 
-	const get_board_options = ['hacker', 'pvt', 'evt1', 'evt2', 'evt3'];
+	const get_board_options = ['fomu-hacker', 'fomu-pvt', 'fomu-evt1', 'fomu-evt2', 'fomu-evt3', 'baseboard-1k', 'custom-sg48', 'custom-uwg30'];
 	var get_board_rev_qp_ret = await vscode.window.showQuickPick(get_board_options);
 
 	const get_template = ['Blank', 'Template', 'Nand2Tetris'];
@@ -59,9 +59,9 @@ async function project_config(icemaker_folder) {
 }
 
 /**
- * create_icemaker(icemaker_folder_path, fomu_rev_quick_pick_selection)
+ * create_icemaker(icemaker_folder_path, board_rev_quick_pick_selection)
  * 
- * Creates a file [project-name, "default:top"].icemaker that contains "FOMU_REV=[fomu_rev_qp];", Creates bin
+ * Creates a file [project-name, "default:top"].icemaker that contains "BOARD_REV=[board_rev_qp];", Creates bin
  * directory, creates PCF directory and copies require PCF files
  * 
  * @param {string} icemaker_folder - path to the folder where the icemaker file will be created
@@ -73,7 +73,7 @@ function create_icemaker(icemaker_folder, qp_ret, get_template_qp_ret, project_n
 	// Create .icemaker project file
 	var icemaker_file_name = 'project.icemaker';
 	var top_file_name = project_name + ".v";
-	var icemaker_file_contents = 'FOMU_REV=' + qp_ret + ';\nTOP_MODULE_NAME=' + project_name + ';\nTOP_FILE_NAME=' + top_file_name + ';';
+	var icemaker_file_contents = 'BOARD_REV=' + qp_ret + ';\nTOP_MODULE_NAME=' + project_name + ';\nTOP_FILE_NAME=' + top_file_name + ';';
   
 	fs.writeFile(path.join(icemaker_folder, icemaker_file_name), icemaker_file_contents, function (err) {
 		if (err) {
@@ -100,6 +100,13 @@ function create_icemaker(icemaker_folder, qp_ret, get_template_qp_ret, project_n
 	}
 
 	// Copy template verilog file (default to template.v)
+	var top_file_type = "custom";
+	if (qp_ret.slice(0, 4) == "fomu") {
+		top_file_type = "fomu";
+	} else if (qp_ret.slice(0, 9) == "baseboard") {
+		top_file_type = "baseboard";
+	}
+	
 	var top_file_template = "template.v";
 	if (get_template_qp_ret == 'Blank') {
 		top_file_template = "blank.v";
@@ -110,13 +117,13 @@ function create_icemaker(icemaker_folder, qp_ret, get_template_qp_ret, project_n
 	}
 	
 	// Copy contents of top file template being used into variable top_template_data
-	fs.readFile(path.join(require('path').dirname(__dirname), "template", top_file_template), 'utf8', (err, top_template_data) => {
+	fs.readFile(path.join(require('path').dirname(__dirname), "template", "top", top_file_type, top_file_template), 'utf8', (err, top_template_data) => {
 		if (err) { 
 			vscode.window.showErrorMessage("0x7 (FS): top file template could not be read. Check if visual studio code has access to reading files in the extension directory");
 			return;
 		} else {
 			// Copy contents of header template into header_data
-			fs.readFile(path.join(require('path').dirname(__dirname), "template", "header.v"), 'utf8', (err, header_data) => {
+			fs.readFile(path.join(require('path').dirname(__dirname), "template", "top", top_file_type, "header.v"), 'utf8', (err, header_data) => {
 				if (err) { 
 					vscode.window.showErrorMessage("0x8 (FS): header file template could not be read. Check if visual studio code has access to reading files in the extension directory");
 					return;

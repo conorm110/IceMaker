@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2022 Conor Mika
+ * Copyright (c) 2024 Conor Mika
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,35 @@
     var board_rev;
     var lines = data.split('\n');
 		for (var i = 0; i < lines.length; i++) {
-			if (lines[i].slice(0, 9) == "FOMU_REV=") {
+			if (lines[i].slice(0, 10) == "BOARD_REV=") {
 				board_rev = lines[i].split('=')[1].split(';')[0];
 				var pnrflags, pcf;
 				var pvt_err = false;
 				var pcf_path = "pcf";
-				if (board_rev == "evt1") {
+				if (board_rev == "fomu-evt1") {
 					pnrflags = "--up5k --package sg48";
 					pcf = pcf_path + "/fomu-evt2.pcf";
-				} else if (board_rev == "evt2") {
+				} else if (board_rev == "fomu-evt2") {
 					pnrflags = "--up5k --package sg48";
 					pcf = pcf_path + "/fomu-evt2.pcf";
-				} else if (board_rev == "evt3") {
+				} else if (board_rev == "fomu-evt3") {
 					pnrflags = "--up5k --package sg48";
 					pcf = pcf_path + "/fomu-evt3.pcf";
-				} else if (board_rev == "hacker") {
+				} else if (board_rev == "fomu-hacker") {
 					pnrflags = "--up5k --package uwg30";
 					pcf = pcf_path + "/fomu-hacker.pcf";
-				} else if (board_rev == "pvt") {
+				} else if (board_rev == "fomu-pvt") {
 					pnrflags = "--up5k --package uwg30";
 					pcf = pcf_path + "/fomu-pvt.pcf";
+				} else if (board_rev == "baseboard-1k") {
+					pnrflags = "--up5k --package sg48";
+					pcf = pcf_path + "/baseboard-1k.pcf";
+				} else if (board_rev == "custom-uwg30") {
+					pnrflags = "--up5k --package uwg30";
+					pcf = pcf_path + "/custom-uwg30.pcf";
+				} else if (board_rev == "custom-sg48") {
+					pnrflags = "--up5k --package sg48";
+					pcf = pcf_path + "/custom-sg48.pcf";
 				} else {
 					pvt_err = true;
 					console.log(board_rev);

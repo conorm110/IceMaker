@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2022 Conor Mika
+ * Copyright (c) 2024 Conor Mika
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,23 +64,43 @@ function get_html() {
 		</style>
 	</head>
 	<body>
-		<h1>Getting Started with IceMaker</h1>
+		<h1>Getting Started with <a href="https://github.com/conorm110/icemaker">IceMaker</a></h1>
 		<p>To open again, run <span class="code">IceMaker: Run Setup Wizard</span> in command palette
 		<hr>
-		<h2 style="padding-bottom: 0px;margin-bottom: 0px;">Installing FOMU Toolchain</h2>
-		<p style="padding-bottom: 0px;margin-bottom: 0px;padding-top: 0px;margin-top: 0px;"><small>FOMU Toolchain installation instructions from <a href="https://github.com/im-tomu/fomu-toolchain#readme">im-tomu/fomu-toolchain/readme.md</a></small></p>
+		<h2 style="padding-bottom: 0px;margin-bottom: 0px;">Installing Toolchain</h2>
+		<p style="padding-bottom: 0px;margin-bottom: 0px;padding-top: 0px;margin-top: 0px;"><small>NOTE: FOMU Toolchain contains IceStorm which is necessary for all boards; toolchain installation instructions from <a href="https://github.com/im-tomu/fomu-toolchain#readme">im-tomu/fomu-toolchain/readme.md</a></small></p>
 		<p>
-			Download the <a href="https://github.com/im-tomu/fomu-toolchain/releases/latest">latest release</a> for your platform and extract it somewhere on your disk. Then set your PATH:
+			Download the <a href="https://github.com/im-tomu/fomu-toolchain/releases/latest">latest release of the FOMU toolchain</a> for your platform and extract it somewhere on your disk. Then set your PATH:
 		</p>
 		<ul>
-			<li>Shell (GNU/Linux, Cygwin/MSYS2/MINGW, MacOS...): <span class="code"> export PATH=[path-to-bin]:$PATH</span></li>
+			<li>Shell (GNU/Linux, Cygwin/MSYS2/MINGW, MacOS...): <span class="code"> export PATH=[path-to-bin]:$PATH</span>
+            <ul><li><small>Note for MacOS: When running any command it will appear as an untrusted program, you have to hit cancel in the pop up and then in system preferences -> security -> general you need to approve every program then run the command again and hit open. This only needs to be done once.</small></li></ul>
+            </li>
 			<li style="padding-top:2px;padding-bottom:2px;">Powershell (Windows): <span class="code"> $ENV:PATH = "[path-to-bin];" + $ENV:PATH</span></li>
 			<li>cmd.exe (Windows): <span class="code"> PATH=[path-to-bin];%PATH%</span></li>
 		</ul>
-		<p> WARNING FOR MAC USERS: When running any command it will appear as an untrusted program, you have to hit cancel in the pop up and then in system preferences -> security -> general you need to approve every program then run the command again and hit open. It only makes you do this once per program but its a pain</p>
-		<p>To confirm installation, run a command such as <span class="code"> nextpnr-ice40</span> or <span class="code"> yosys</span>. Then, reload vs code.</p>
-	
-		<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Creating Your First Project</h2>
+		 
+		<p>To confirm installation, run a command such as <span class="code"> nextpnr-ice40</span> or <span class="code"> yosys</span>. Then, reload VS Code.</p>
+		<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Creating a New Project</h2>
+        <ol>
+        <li>Open the command palette by running <span class="code">IceMaker: Create New Project Template</span> and selecting an empty folder</li>
+        <li>Select your development board version (if using custom board select the footprint of your FPGA, either Custom-UWG30 or Custom-SG48)</li>
+        <li>Select your project template; read <a href="https://github.com/conorm110/icemaker">here</a> for more information on templates</li>
+        <li>Enter the name for your top level Verilog file (also your project name)</li>
+        <li>Edit the generated Verilog code, and, if using custom board, configure the pin assignments (read Editing Pin Assignments section below for more information)</li>
+        <li>Build your code by running <span class="code">IceMaker: Synthesize, PNR, and Generate Bitstream</span> in the command palette</li>
+        <li>Uploading Code
+        <ul>
+        <li>If using a FOMU, continue to the section below on Configuring FOMU for USB Uploading</li>
+        <li>If not using a FOMU, you can upload the binary file in the bin folder to your development board's configuration PROM</li>
+        </ul>
+        </ol>
+        <h2 style="padding-bottom: 7px;margin-bottom: 0px;">Editing Pin Assignments</h2>
+        <p>Custom and generic iCE40 Ultra development boards are supported through the custom-sg48 and custom-uwg30 board types. The board type is selected during project generation and can be changed later in the project.icemaker file. The footprint of the FPGA on your custom/generic development board must match the selected board type. </p>
+
+<p>The I/O defined in the top level Verilog file must be set in the .pcf file corresponding to your custom board's board type. The .pcf files are located in the pcf folder generated in icemaker projects. Each I/O pin must be defined as <span class="code">set_io [pin name] [pin code]</span>. For example, <span class="code">set_io rgb0 39</span> or <span class="code">set_io rgb0 A5</span></p>
+		<h2 style="padding-bottom: 7px;margin-bottom: 0px;">Configuring FOMU for USB Uploading</h2>
+        <p style="padding-bottom: 0px;margin-bottom: 0px;padding-top: 0px;margin-top: 0px;"><small>NOTE: Not necessary if not using FOMU</small></p>
 		<ol style="padding-top:0px;margin-top:0px;">
 			<li>Setup udev rules for GNU/linux ONLY</li>
 			<ul>
@@ -105,60 +125,11 @@ function get_html() {
 			<ul>
 				<li>Check FOMU bootloader version with <span class="code">dfu-util -l</span>. If version is older than v2.0.3, you need to <a href="https://workshop.fomu.im/en/latest/bootloader.html#bootloader-update">update the fomu bootloader</a>.</li>
 			</ul>
-			<li>Create a new project template in Command Palette by running <span class="code">IceMaker: Create New Project Template</span></li>
+			<li>Open your IceMaker project</span></li>
 			<li>Generate bitstream for FOMU in Command Palette by running <span class="code">IceMaker: Synthesize, PNR, and Generate Bitstream</span></li>
 			<li>Upload to the FOMU in Command Palette by running <span class="code">IceMaker: Upload Project to FOMU</span></li>
-			<li>After a few seconds your FOMU should begin blinking RGB!</li>
 		</ol>
-		<h2 style="padding-bottom: 0px;margin-bottom: 0px;">Creating A Second Project with Multiple Files</h2>
-		<ol>
-			<li>Create a new project template in Command Palette by running <span class="code">IceMaker: Create New Project Template</span></li>
-			<ul>
-				<li>Select the folder to create the new icemaker project</li>
-				<li>Select your <a href="https://workshop.fomu.im/en/latest/requirements/hardware.html">board revision</a></li>
-			</ul>
-			<li>Create a new verilog file called <span class="code">slowclk.v</span> in your project directory.</li>
-			<li>Paste the following into slowclk.v:</li>
-			<p class="code" style="width:40%">
-			module slowclk (<br>
-			input clk_in,<br>
-			output clk_out<br>
-			);<br>
-			reg [22:0] counter;<br>
-			<br>
-			always @(posedge clk_in) begin<br>
-			counter <= counter + 1;<br>
-			end<br>
-			<br>
-			assign clk_out = counter[19];<br>
-			<br>
-			endmodule
-			</p>
-			<p>NOTE: Your module name should always be the name of your verilog file, one module per file</p>
-			<li>Back in top.v, replace </li>
-			<p class="code" style="width:40%">
-			// Divide clock to much slower signal so we can see it<br>
-			reg [22:0] counter = 0;<br>
-			always @(posedge clk) begin<br>
-			counter <= counter + 1;<br>
-			end<br>
-			wire slow_clk = counter[22];
-			</p>
-			<p>with this:</p>
-			<p class="code" style="width:40%">
-			wire slow_clk;<br>
-			slowclk slowclk_inst (<br>
-			.clk_in(clk),<br>
-			.clk_out(slow_clk)<br>
-			);
-			</p>
-			<li>Generate bitstream for FOMU in Command Palette by running <span class="code">IceMaker: Synthesize, PNR, and Generate Bitstream</span></li>
-			<ul>
-				<li>If you do not have a file in your project directory open, you will be prompted for your .icemaker project file</li>
-			</ul>
-			<li>Upload to the FOMU in Command Palette by running <span class="code">IceMaker: Upload Project to FOMU</span></li>
-			<li>After a few seconds your FOMU should begin blinking RGB faster!</li>
-		</ol>
+		
 	</body>
 </html>`;
 }
