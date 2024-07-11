@@ -8,7 +8,7 @@ Visual Studio Code extension automating tasks for programming iCE40 Ultra develo
 3. Open the command palette and run `IceMaker: Run Setup Guide` for further instructions on using the extension's tools. 
 
 ## Supported Boards
-Currently the FOMU FPGA family are the only directly supported development boards that are commercially available. It also supports my BaseBoard-1K development board, based on the iCE5LP1K, which has openly available schematics and is easy to replicate.
+Currently the FOMU FPGA family are the only directly supported development boards that are commercially available. All other iCE40 Ultra based boards will work for everything except direct uploading. 
 
 ### FOMU
 [FOMU](https://tomu.im/fomu.html) boards are all directly supported. The toolchain creates a bitstream file which can later be uploaded to a FOMU by running `IceMaker: Upload Project to FOMU` in the command palette. 
@@ -18,10 +18,6 @@ Custom and generic iCE40 Ultra development boards are supported through the cust
 The I/O defined in the top level Verilog file must be set in the .pcf file corresponding to your custom board's board type. The .pcf files are located in the pcf folder generated in icemaker projects. Each I/O pin must be defined as `set_io [pin name] [pin code]`. For example, `set_io rgb0 39` or `set_io vga0 A5`
 
 Output files are located in the bin file generated in icemaker projects. Icepack generates a final binary file that should be loaded onto your development board's configuration flash PROM. 
-### BaseBoard
-BaseBoard-1K is based on the iCE5LP1K-SG48 and has a DSUB (VGA) connector, a 50 MHz oscillator, and two PMOD headers. Simplifying the design, the FPGA loads its code only from the onboard SST 25VF080B Flash IC. The binary file generated from IceMaker can be loaded onto the flash chip with any SPI programmer or PROM programmer. 
-
-Currently, there is no Verilog VGA controller module or PMOD pin assignments in the extension. BaseBoard is still a work in project, improved template code and schematics will be added soon.
 
 ## Project Templates
 To aid starting projects, three project templates are available:
